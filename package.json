@@ -1,0 +1,20 @@
+{
+  "name": "react-express-todolist",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "concurrently \"nodemon app.js\" \"cd client; yarn start\"" ,
+    "debug": "concurrently \"nodemon --inspect app.js\" \"cd client; yarn start\""
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bulma": "^0.6.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.0.9",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}
