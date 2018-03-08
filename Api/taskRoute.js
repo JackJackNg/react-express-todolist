@@ -21,10 +21,7 @@ router.get('/', ({
     })
 })
 
-router.post('/create', ({
-  user,
-  body
-}, res) => {
+router.post('/create', ({ user }, res) => {
 
   if (!user) {
     res.sendStatus(401)
