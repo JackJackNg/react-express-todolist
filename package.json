@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "concurrently \"nodemon app.js\" \"cd client; yarn start\"" ,
+    "start": "concurrently \"nodemon app.js\" \"cd ./client ; yarn start\"" ,
     "debug": "concurrently \"nodemon --inspect app.js\" \"cd client; yarn start\""
   },
   "license": "MIT",
