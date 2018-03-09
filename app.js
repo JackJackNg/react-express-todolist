@@ -5,11 +5,10 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cors = require('cors')
+const { userRoute, taskRoute, loginRoute} = require('./Api')
 const {
-  userRoute,
-  taskRoute
-} = require('./Api')
-const {authentication} = require('./Authentication')
+  authentication
+} = require('./Authentication')
 
 const PORT = process.env.PORT || 3001
 const app = express()
@@ -34,8 +33,22 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+
+app.use('/', loginRoute)
 app.use('/user', userRoute)
-app.use('/task', authentication, taskRoute)
+
+
+app.use((req, res, next) => {
+  if (req.user) {
+    console.log('logined user: ',req.user.username)
+    next()    
+    return
+  }
+  res.send(401)
+})
+
+// Restrictive api 
+app.use('/task', taskRoute)
 
 app.use(express.static(path.join(__dirname, 'public')))
 

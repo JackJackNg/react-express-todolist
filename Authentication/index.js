@@ -38,6 +38,7 @@ passport.use(new LocalStrategy(
 
 module.exports = passport
 module.exports.authentication = passport.authenticate('local', {
-  successRedirect: '/user',
-  failureRedirect: '/user/login'
+  // successMessage: 'you are authenticate',
+  // failureMessage: 'login requried'
+  successRedirect:'/isLogin'
 })

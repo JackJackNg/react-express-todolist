@@ -1,27 +1,24 @@
 const router = require('express').Router()
 const Task = require('../Model/Task')
 
-router.get('/', ({
-  user
+router.get('/', ({ user
 }, res) => {
   if (!user) {
     res.sendStatus(401)
     return
   }
 
-  Task.find().exec()
+  Task.find({owner  : user._id}).exec()
     .then((doc, err) => {
       if (err) {
-        res.json({
-          err: err
-        })
+        res.json({ err: err })
       } else {
         res.json(doc)
       }
     })
 })
 
-router.post('/create', ({ user }, res) => {
+router.post('/create', ({ user, ...req }, res) => {
 
   if (!user) {
     res.sendStatus(401)
@@ -53,6 +50,21 @@ router.post('/create', ({ user }, res) => {
       res.sendStatus(201)
       return
   })
+})
+
+router.put('/update/:id', async (req,res) => {
+  if (!req.user) {
+    res.sendStatus(401)
+    return
+  }
+
+  const taskId = req.params.id  
+  // const { title, deadline, priority, isdone = false, description } = req.body
+  const response = await Task.findById(taskId).exec()
+  console.log(response)
+  res.sendStatus(204)
+
+
 })
 
 
