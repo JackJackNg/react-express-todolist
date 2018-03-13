@@ -14,12 +14,9 @@ class LoginForm extends BaseForm {
   }
 
   render() {
-    const username = 'jack'
-    const password = '12345'
-
     return (
       <form method="POST" action="" onSubmit={this.handleLogIn}>
-        <label htmlFor="username">user name</label>
+       <label htmlFor="username">user name</label>
         {/* <input type="text" name='username' value="">  */}
         <input type="text" name='username' defaultValue="jack" ref={ref => this.inputUsername = ref} />
         <br />
@@ -28,24 +25,39 @@ class LoginForm extends BaseForm {
         {/* <input type="password" name="password" value="">  */}
         <input type="password" name="password" defaultValue="12345" ref={ref => this.inputPassword = ref} />
         <input type="submit" value="login" />
+        <input type="button" value="isLogin" onClick={this.testLogIn} />
       </form>
     )
   }
 
-  handleLogIn(e) {
+  async handleLogIn(e) {
     e.preventDefault()
     e.persist()
-    axios.post('http://localhost:3001/user/login', {
-      username: this.inputUsername.value,
-      password: this.inputPassword.value
-    }).then(({ status }) => {
-      if (status === 200) {
-        console.log(status) 
-        this.onSubmit(e, true)
-        return
-      }
+    console.log('handleLogIn', this.inputUsername.value, this.inputPassword.value)
+    const {status} = await axios.post('http://localhost:3000/login',{ username: 'jack', password: '12345' },{
+      headers: {'content-type': 'application/json'}
+      // withCredentials:true
     })
+    if (status === 200) {
+      // this.onSubmit(e,true)
+      return
+    }
+    
   }
+
+  async testLogIn(e) {
+    e.preventDefault()
+    e.persist()
+    const {status} = await axios.get('http://localhost:3000/isLogin' )
+    console.log(status)
+  }
+
+  componentDidMount() { 
+    console.log('componet will mount')
+  }
+
+
+
 }
 
 export default LoginForm 

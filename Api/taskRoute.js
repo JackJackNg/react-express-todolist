@@ -16,15 +16,10 @@ router.get('/', ({ user
         res.json(doc)
       }
     })
+
 })
 
 router.post('/create', ({ user, ...req }, res) => {
-
-  if (!user) {
-    res.sendStatus(401)
-    return
-  }
-
   const {
     title,
     deadline,
@@ -39,7 +34,7 @@ router.post('/create', ({ user, ...req }, res) => {
     priority: priority,
     isdone: isdone,
     description: description,
-    owner: req.session.userid ? req.session.userid : "5a980bcd80707033c419ab47" // remove this if done
+    owner: user._id
   })
 
   task.save((err, docs) => {
@@ -53,17 +48,18 @@ router.post('/create', ({ user, ...req }, res) => {
 })
 
 router.put('/update/:id', async (req,res) => {
+
   if (!req.user) {
     res.sendStatus(401)
     return
   }
 
-  const taskId = req.params.id  
-  // const { title, deadline, priority, isdone = false, description } = req.body
-  const response = await Task.findById(taskId).exec()
-  console.log(response)
-  res.sendStatus(204)
-
+  const query = { _id: req.params.id  }
+  const { _id,owner, ...update} = req.body
+  
+  const previousTask = await Task.findOneAndUpdate(query,update).exec()
+  res.status(200).json(previousTask)
+  return 
 
 })
 

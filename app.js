@@ -23,7 +23,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }))
-app.use(cors())
+
+app.use(cors({
+  credentials: true,
+  origin:'http://localhost:3000'
+}))
+
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -37,7 +42,7 @@ app.use(passport.session())
 app.use('/', loginRoute)
 app.use('/user', userRoute)
 
-
+// Authentication middleware
 app.use((req, res, next) => {
   if (req.user) {
     console.log('logined user: ',req.user.username)
