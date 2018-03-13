@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
 import CreateForm from './component/CreateForm'
 import LoginForm from './component/LoginForm'
-import logo from './logo.svg'
+import ToDoList from './component/ToDoList'
+import Axios from 'axios';
 import './App.css'
 import 'bulma'
+import logo from './logo.svg'
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       users: [{ _id: '123412', username: 'Jack' }],
-      isLoggin: false
+      isLogin: false
     }
-
     this.handleLogin = this.handleLogin.bind(this)
   }
 
   render() {
-    // TO DO : add in task api 
+    // TO DO : Complete to do task api 
+    // TO DO : Figure out persistencely store login use so the login page won't not keep refreshing.
     const { users } = this.state
     const userlist = users.map((element) => {
       return (
@@ -28,7 +30,7 @@ class App extends Component {
     })
 
 
-    const login = this.state.isLoggin ? (<h1>Loged in </h1>)
+    const login = this.state.isLogin ? (<h1>Loged in </h1>)
                                       : (<div>
                                           <h2>login</h2>
                                           <LoginForm onSubmit={this.handleLogin}/>
@@ -42,29 +44,36 @@ class App extends Component {
         </header>
 
         {/* TO DO : when user has loggined before  */}
-        {login}
-        
-        <h1>create todo</h1>
-        <CreateForm onSubmit={this.handleCreateTask}/> {/* TO DO : when user has loggined before  */}
-        {/* {userlist} */}
+        <div className="columns">
+          <div className="column is-half">
+            {login}
+            <h1>create todo</h1>
+            <CreateForm onSubmit={this.handleCreateTask}/> 
+          </div>
+          <div className="column is-half">
+            <h1>ToDoList</h1>
+            <ToDoList/> 
+          </div>
+        </div>
       </div>
     )
   }
   
-  handleCreateTask (e) {
-    e.preventDefault() 
-    throw new Error('not implemented')
+  handleCreateTask (e,isCreated) {
+    e.preventDefault()     
+    console.log('isCreated',isCreated)    
   }
 
-  handleLogin (e,isLoggin) {
+  handleLogin (e,isLogin) {
     e.preventDefault()  
     this.setState({
-      isLoggin : isLoggin
+      isLogin : isLogin
     })
-    console.log('islog in',this.state.isLoggin)
+    console.log('islog in',this.state.isLogin)
   }
 
   componentWillMount() {
+
     fetch('http://localhost:3001/user',
       {
         method: 'GET'
