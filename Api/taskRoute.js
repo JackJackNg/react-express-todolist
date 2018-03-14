@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Task = require('../Model/Task')
+const moment = require('moment')
 
 router.get('/', ({ user
 }, res) => {
@@ -54,14 +55,20 @@ router.put('/update/:id', async (req,res) => {
     return
   }
 
+  try {
+
   const query = { _id: req.params.id  }
   const { _id,owner, ...update} = req.body
-  
   const previousTask = await Task.findOneAndUpdate(query,update).exec()
-  res.status(200).json(previousTask)
+
+  } catch (e) {
+    res.sendStatus(400)
+    return
+  }
+
+  res.sendStatus(200)
   return 
 
 })
-
 
 module.exports = router

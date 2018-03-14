@@ -1,7 +1,7 @@
 import React from 'react';
 import BaseForm from './base/BaseForm'
-import PropTypes from 'prop-types'
 import axios from 'axios'
+import { convertLocalToUtc } from '../util/time'
 
 class CreateForm extends BaseForm {
   constructor(props){
@@ -42,15 +42,18 @@ class CreateForm extends BaseForm {
     e.persist()
     const data = this.getFormData() 
     const {status} = await axios.post('http://localhost:3000/task/create',data)
+    console.log(status)
+
     if(status === 201){
       this.onSubmit(e,true) 
     }
+
   }
 
   getFormData() {
    return { 
       title: this.inputTitle.value,
-      deadline: this.inputDeadline.value,
+      deadline: convertLocalToUtc(this.inputDeadline.value),
       priority: this.inputPriority.value,
       description: this.inputDescription.value
    } 
