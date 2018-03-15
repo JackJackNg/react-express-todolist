@@ -4,7 +4,7 @@ import LoginForm from './component/LoginForm'
 import RegisterForm from './component/RegisterForm'
 import ToDoList from './component/ToDoList'
 import './App.css'
-import 'bulma'
+import 'bulma/css/bulma.css'
 import logo from './logo.svg'
 
 class App extends Component {
@@ -20,9 +20,26 @@ class App extends Component {
   render() {
     const login = this.state.isLogin ? (<h1>Loged in </h1>)
                                       : (<div>
+                                        
                                           <h2>login</h2>
                                           <LoginForm onSuccess={this.logInSuccess}/>
+
+                                          <h1>Register</h1>
+                                          <RegisterForm onSuccess={this.registerSuccess}/> 
+
                                         </div>)
+
+    const create = this.state.isLogin ?(<div>
+                                          <h1>create todo</h1>
+                                          <CreateForm onSuccess={this.createTaskSuccess}/>
+                                        </div>)
+                                      : null
+
+    const todo = this.state.isLogin ? ( <div className="column container is-two-third">
+                                          <ToDoList ref={ref => this.toDoList = ref} /> 
+                                        </div>                                          
+                                      )
+                                    : null
 
     return (
       <div className="App">
@@ -30,25 +47,18 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-
-        <div className="columns">
-          <div className="column is-half">
-
+        <section className="section">
+         <div className="columns">
+          <div className="column container is-one-third">
             {login}
-
-            <h1>Register</h1>
-            <RegisterForm onSuccess={this.registerSuccess}/> 
-
-            <h1>create todo</h1>
-            <CreateForm onSuccess={this.createTaskSuccess}/> 
-
-          </div>
-                  
-          <div className="column is-half">
-            <ToDoList ref={ref => this.toDoList = ref} /> 
-          </div>
+            <hr/>
+            {create}
+          </div> 
+          {todo}
 
         </div>
+        </section>
+        
       </div>
     )
   }
@@ -62,6 +72,7 @@ class App extends Component {
     this.setState({
       isLogin : true 
     })
+    this.toDoList.update()
   }
 
   registerSuccess (e, isRegister) {

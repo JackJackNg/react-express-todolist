@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { convertUtcToLocal } from '../util/time'
 import axios from 'axios'
-
+import 'bulma/css/bulma.css';
 
 class ToDoList extends Component {
   constructor(props) {
@@ -11,36 +11,51 @@ class ToDoList extends Component {
     }
     this.update = this.update.bind(this)
     this.updateItemDone = this.updateItemDone.bind(this)
+    this.removeItem = this.removeItem.bind(this)
   }
 
   render() {
     const taskList = this.state.data.map((task, index) => {
       const { title, deadline, priority, description,isdone} = task
-      return (<li key={task._id} style={{'text-decoration': (task.isdone?'line-through':'none') }}>
-        <span>{title}</span>
-        <span>{convertUtcToLocal(deadline).format('DD MMM')} </span>
-        <span>{priority}</span>
-        <span>{description} </span>
-        <span>{isdone} </span>
-        {isdone?(<span>is Done</span>):(<button onClick={this.updateItemDone.bind(this,task)}>Mark as Done</button>)}
-      </li>)
+      return (<tr key={task._id} >
+        <td style={{'textDecoration': (task.isdone?'line-through':'none') }}>{title}</td>
+        <td>{convertUtcToLocal(deadline).format('DD MMM hh:mm')} </td>
+        <td>{convertPriority(priority)} </td>
+        <td>{description} </td>
+        <td>{isdone?('is Done')
+                   :( <button onClick={this.updateItemDone.bind(this,task)}>Mark as Done</button>)}
+            <button onClick={this.removeItem.bind(this,task)}> X </button>
+        </td>
+      </tr>)
     })
 
     return (
       <div>
-        <button onClick={this.update}> Update </button>
-        <ul>
-          {taskList}
-        </ul>
+        <table className="table"> 
+
+          <thead>
+            <tr>
+              <td>Title</td>
+              <td>DeadLine</td>
+              <td>Priority</td>
+              <td>Description</td>
+              <td>IsDone</td>
+            </tr>
+          </thead>
+
+          <tbody>
+            {taskList} 
+          </tbody>
+
+        </table> 
       </div>
     )
   }
 
   async update() {
     const { data } = await axios.get('http://localhost:3000/task')
-    console.log(data)
     this.setState({
-      data: data
+      data: sort(data)
     })
   }
 
@@ -52,9 +67,55 @@ class ToDoList extends Component {
     {
       this.update() 
     }
-
   }
 
+  async removeItem (item) {
+    const { _id } = item
+    const { status } = await axios.delete(`http://localhost:3000/task/remove/${_id}`, item) 
+    if (status === 200)
+    {
+      this.update() 
+    }
+  }
+}
+
+
+function convertPriority (value) {
+  switch(value){
+    case 0 :{
+      console.log(value)
+      return 'Normal'
+    }
+    case 1 : 
+    {
+      console.log(value)
+      return 'High'
+    }
+    case 2:
+    case 3:  
+    {
+      console.log(value)
+      return 'Urgent'
+    }
+    default :
+    {
+      return ''
+    }
+  }
+}
+
+  function sort(array) {
+    const newArray = array.slice(0)
+    return newArray.sort(comparator)
+  }
+
+  function comparator(a,b){
+    
+    if(a.priority>b.priority) return -1 
+
+    if(a.priority<b.priority) return 1
+ 
+    return 0
 }
 
 export default ToDoList 

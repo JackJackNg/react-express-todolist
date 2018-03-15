@@ -3,7 +3,7 @@ const { authentication } = require('../Authentication')
 
 
 router.post('/login',authentication,(req, res, next) => {
- res.sendStatus(200) 
+  res.sendStatus(200) 
 })
 
 router.get('/isLogin',(req, res,next) => {

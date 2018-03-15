@@ -25,8 +25,8 @@ class CreateForm extends BaseForm {
         <label htmlFor="priority">Priority</label>
         <select name="priority" defaultValue="0" ref={ref => this.inputPriority = ref}>
           <option value="0">Normal</option>
-          <option value="2">High</option>
-          <option value="3">Urgent</option>
+          <option value="1">High</option>
+          <option value="2">Urgent</option>
         </select>
         <br />
 

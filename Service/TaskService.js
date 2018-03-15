@@ -41,9 +41,6 @@ class TaskService {
     isdone,
     description
   }) {
-    const query = {
-      _id: _id
-    }
     const update = {
       title: title,
       deadline: deadline,
@@ -54,7 +51,19 @@ class TaskService {
 
     return new Promise((resolve, reject) => {
       try {
-        const data = Task.findOneAndUpdate(query, update).exec()
+        const data = Task.findByIdAndUpdate(_id, update).exec()
+        resolve(true)
+      } catch (error) {
+        reject(false)
+      }
+    })
+  }
+
+  static async remove({ _id }) {
+
+    return new Promise((resolve, reject) => {
+      try {
+        const data = Task.findByIdAndRemove(_id).exec()
         resolve(true)
       } catch (error) {
         reject(false)
