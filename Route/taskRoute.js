@@ -59,4 +59,14 @@ router.put('/update/:id', async (req,res) => {
 
 })
 
+router.delete('/remove/:id', async (req,res) => {
+  const task = { _id: req.params.id}
+  const isSucess = await TaskService.remove(task)
+  if (isSucess) {
+    res.sendStatus(200)
+  } else {
+    res.sendStatus(400)
+  }
+})
+
 module.exports = router
