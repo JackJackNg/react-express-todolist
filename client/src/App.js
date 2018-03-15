@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import CreateForm from './component/CreateForm'
 import LoginForm from './component/LoginForm'
+import RegisterForm from './component/RegisterForm'
 import ToDoList from './component/ToDoList'
 import './App.css'
 import 'bulma'
@@ -10,17 +11,17 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      users: [{ _id: '123412', username: 'Jack' }],
       isLogin: false
     }
-    this.handleLogin = this.handleLogin.bind(this)
+    this.logInSuccess = this.logInSuccess.bind(this)
+    this.createTaskSuccess = this.createTaskSuccess.bind(this)
   }
 
   render() {
     const login = this.state.isLogin ? (<h1>Loged in </h1>)
                                       : (<div>
                                           <h2>login</h2>
-                                          <LoginForm onSubmit={this.handleLogin}/>
+                                          <LoginForm onSuccess={this.logInSuccess}/>
                                         </div>)
 
     return (
@@ -32,30 +33,45 @@ class App extends Component {
 
         <div className="columns">
           <div className="column is-half">
+
             {login}
+
+            <h1>Register</h1>
+            <RegisterForm onSuccess={this.registerSuccess}/> 
+
             <h1>create todo</h1>
-            <CreateForm onSubmit={this.handleCreateTask}/> 
+            <CreateForm onSuccess={this.createTaskSuccess}/> 
+
           </div>
+                  
           <div className="column is-half">
-            <ToDoList /> 
+            <ToDoList ref={ref => this.toDoList = ref} /> 
           </div>
+
         </div>
       </div>
     )
   }
   
-  handleCreateTask (e,isCreated) {
-    e.preventDefault()     
-    console.log('isCreated',isCreated)    
+  createTaskSuccess () {
+    console.log('isCreated')    
+    this.toDoList.update()
   }
 
-  handleLogin (e,isLogin) {
-    e.preventDefault()  
+  logInSuccess () {
     this.setState({
-      isLogin : isLogin
+      isLogin : true 
     })
-    console.log('islog in',this.state.isLogin)
   }
+
+  registerSuccess (e, isRegister) {
+    console.log('Registered', isRegister)
+  }
+
+  componentDidMount() {
+    console.log(this.toDoList)
+  }
+
 }
 
 export default App

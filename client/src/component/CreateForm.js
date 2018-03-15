@@ -4,6 +4,7 @@ import axios from 'axios'
 import { convertLocalToUtc } from '../util/time'
 
 class CreateForm extends BaseForm {
+
   constructor(props){
     super(props)
     this.getFormData = this.getFormData.bind(this)
@@ -41,13 +42,11 @@ class CreateForm extends BaseForm {
     e.preventDefault()
     e.persist()
     const data = this.getFormData() 
-    const {status} = await axios.post('http://localhost:3000/task/create',data)
-    console.log(status)
+    const { status } = await axios.post('http://localhost:3000/task/create',data)
 
     if(status === 201){
-      this.onSubmit(e,true) 
+      this.onSuccess() 
     }
-
   }
 
   getFormData() {

@@ -5,12 +5,12 @@ class BaseForm extends Component {
 
   constructor(props) {
     super(props)
-    this.onSubmit = props.onSubmit.bind(this)
+    this.onSuccess = props.onSuccess.bind(this)
   }
 }
 
 BaseForm.protoType = {
-  onSubmit: PropTypes.func.isRequired
+  onSuccess: PropTypes.func.isRequired
 }
 
 export default BaseForm
