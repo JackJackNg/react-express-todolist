@@ -1,10 +1,10 @@
 {
   "name": "react-express-todolist",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "concurrently \"nodemon app.js\" \"cd ./client ; yarn start\"",
-    "debug": "concurrently \"nodemon --inspect app.js\" \"cd client; yarn start\""
+    "start": "concurrently \"nodemon server.js\" \"cd ./client ; yarn start\"",
+    "debug": "concurrently \"nodemon --inspect server.js\" \"cd client; yarn start\""
   },
   "license": "MIT",
   "dependencies": {
