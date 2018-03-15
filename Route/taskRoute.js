@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const Task = require('../Model/Task')
+const { TaskService } = require('../Service')
 const moment = require('moment')
 
-router.get('/', ({ user
-}, res) => {
+router.get('/', ({ user }, res) => {
   if (!user) {
     res.sendStatus(401)
     return
@@ -20,54 +20,42 @@ router.get('/', ({ user
 
 })
 
-router.post('/create', ({ user, ...req }, res) => {
+router.post('/create', async ({ user, ...req }, res) => {
   const {
     title,
     deadline,
     priority,
-    isdone = false,
     description
   } = req.body
 
-  const task = new Task({
+  const isSuccess = await TaskService.create({
     title: title,
     deadline: deadline,
     priority: priority,
-    isdone: isdone,
     description: description,
     owner: user._id
   })
 
-  task.save((err, docs) => {
-    if (err) {
-      res.sendStatus(400)
-      return
-    }
-      res.sendStatus(201)
-      return
-  })
+  if (isSuccess) {
+    res.sendStatus(201)
+  } else {
+    res.sendStatus(400)
+  }
+
 })
 
 router.put('/update/:id', async (req,res) => {
 
-  if (!req.user) {
-    res.sendStatus(401)
-    return
-  }
+  const { ...update } = req.body
+  update._id = req.params.id
 
-  try {
+  const isSucess = await TaskService.update(update)
 
-  const query = { _id: req.params.id  }
-  const { _id,owner, ...update} = req.body
-  const previousTask = await Task.findOneAndUpdate(query,update).exec()
-
-  } catch (e) {
+  if (isSucess) {
+    res.sendStatus(200)
+  } else {
     res.sendStatus(400)
-    return
   }
-
-  res.sendStatus(200)
-  return 
 
 })
 
